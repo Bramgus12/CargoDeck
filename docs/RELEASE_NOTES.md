@@ -13,6 +13,11 @@ dropping into Terminal.
 
 ## Changes
 
+- **Container GUI is now CargoDeck.** The app, installer, and disk image use
+  the new name.
+- **Apple Container 1.5 compatibility.** System status now reads the daemon
+  version from the nested `server.version` field while retaining support for
+  older payloads. See [the compatibility report](CLI_1.5.0_COMPATIBILITY.md).
 - **Registries**, a new destination after Images. It lists the hosts the CLI is
   logged in to, logs in with a server, user name and token, and logs out after a
   confirmation that names the host.
@@ -42,6 +47,9 @@ dropping into Terminal.
 
 ## Compatibility
 
+- macOS 26 or later on Apple-silicon Macs. Machines requires CLI 1.0.0 or later.
+- The latest validated CLI is **1.5.0**. Its exact command reference is
+  [Apple's 1.5.0 command reference](https://github.com/apple/container/blob/1.5.0/docs/command-reference.md).
 - **The supported CLI range is now 0.12.3–<2.0**, raised from 0.12.0. 0.12.3 is
   the first release carrying Apple's registry-related HTTP-downgrade fixes, and
   the network paths this release exposes are the ones those fixes affect. The
@@ -57,6 +65,27 @@ dropping into Terminal.
   disabled — an option that cannot work is better not offered.
 - Observed CLI surfaces are recorded in `docs/CLI_IMAGE_REGISTRY_BASELINE.md`.
 
+## Validation
+
+- Prepared by Codex for Bram Gussekloo on 1 October 2026 on an Apple-silicon
+  MacBook Pro running macOS 27.2 (26B5091g), with Xcode 27.2 and Apple Container
+  CLI 1.5.0. App source is based on `ce92135`, with the 1.6.0/build 9 version bump.
+- All **466 Debug tests** passed: 438 unit tests and 28 fake-CLI UI tests.
+  All **466 optimized Release tests** passed as well (438 unit, 28 UI).
+  UI runs recorded a QoS priority-inversion runtime warning.
+- Static analysis passed with the project's normal settings. The stricter
+  warnings-as-errors check failed on two existing unused-result warnings in
+  SwiftTerm 1.20.0. Existing app actor-isolation and trailing-closure warnings
+  also remain; this release does not claim a warning-free build.
+- Apple's notary service accepted both the app and disk image. Both tickets
+  are stapled, and Gatekeeper reports `accepted` with
+  `source=Notarized Developer ID`. The copied app also passed signature,
+  stapled-ticket, and Gatekeeper verification after extraction from the DMG.
+- The CLI 1.5.0 real smoke results from 1 October are recorded in the linked
+  compatibility report. Manual VoiceOver/accessibility checks, disposable
+  registry login/push checks, CLI 0.12.3 smoke tests, slow-network smoke tests,
+  and clean-second-Mac/offline launch checks were not repeated for this release.
+
 ## Known limitations
 
 - Remote registry browsing is not offered because the CLI has no catalog,
@@ -68,6 +97,39 @@ dropping into Terminal.
 - Registry login, logout, and push stay out of `scripts/real-smoke-test.sh`:
   they mutate stored credentials or a remote registry. The release checklist has
   an opt-in section for them against a disposable registry.
+- Interactive container terminals, build secrets and SSH forwarding, kernel
+  settings, and remote container hosts remain outside the app's scope.
+- CLI 1.5.0 can report successful copying into a named-volume mount without
+  making the file visible there; volume read/write through `exec` works. See
+  the compatibility report.
+
+## Download verification
+
+`CargoDeck.dmg` SHA-256:
+`96640b782054fb04b82cb124179f3be965c4eafab63dc645ef1f41ad983ee52c`
+
+The app and disk image are Developer ID signed, notarized, and stapled. Verify
+an installed copy with:
+
+```sh
+spctl --assess --type execute --verbose=4 "/Applications/CargoDeck.app"
+xcrun stapler validate "/Applications/CargoDeck.app"
+```
+
+## Upgrade and rollback
+
+Re-run the install command above to install CargoDeck. This is the first release
+under the new name: it installs `CargoDeck.app` alongside an existing
+`Container GUI.app`. Quit the old app before launching CargoDeck. The new bundle
+identifier uses separate preferences, so select a custom CLI path again if
+needed; container, image, and registry data remain managed by Apple Container.
+
+To return to 1.5.0, quit CargoDeck and open the retained `Container GUI.app`, or
+use that release's installer, which expects the old asset and app names:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/Bramgus12/CargoDeck/v1.5.0/scripts/install.sh | bash -s -- --version v1.5.0
+```
 
 # CargoDeck 1.5.0
 
