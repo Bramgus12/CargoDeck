@@ -70,6 +70,8 @@ directly, never through a shell.
   **0.12.3 or later and earlier than 2.0.0**. The **Machines** screen needs
   **1.0.0 or later**, since that is when `container machine` was added; below it
   the screen is hidden rather than shown broken.
+- CLI **1.5.0** is the latest validated release. See the
+  [upgrade compatibility notes](docs/CLI_1.5.0_COMPATIBILITY.md) for checks and rollback.
 - Xcode, when building CargoDeck from source — see
   [Building from source](#building-from-source) for its two setup steps
 

@@ -5,6 +5,33 @@ nonisolated struct SystemStatusDTO: Decodable, Equatable, Sendable {
     let healthy: Bool?
     let version: String?
     let message: String?
+
+    init(status: String?, healthy: Bool?, version: String?, message: String?) {
+        self.status = status
+        self.healthy = healthy
+        self.version = version
+        self.message = message
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case status, healthy, version, message, apiServerVersion, server
+    }
+
+    private struct ServerVersion: Decodable {
+        let version: String?
+    }
+
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        status = try values.decodeIfPresent(String.self, forKey: .status)
+        healthy = try values.decodeIfPresent(Bool.self, forKey: .healthy)
+        message = try values.decodeIfPresent(String.self, forKey: .message)
+        // CLI 1.4.1 moved daemon metadata into `server`. Keep both older
+        // spellings so upgrading or rolling back does not lose its version.
+        version = try values.decodeIfPresent(String.self, forKey: .version)
+            ?? values.decodeIfPresent(ServerVersion.self, forKey: .server)?.version
+            ?? values.decodeIfPresent(String.self, forKey: .apiServerVersion)
+    }
 }
 
 nonisolated struct SystemStatus: Equatable, Sendable {

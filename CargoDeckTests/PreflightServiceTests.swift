@@ -67,6 +67,23 @@ final class PreflightServiceTests: XCTestCase {
         XCTAssertEqual(storedState, state)
     }
 
+    func testReportsReadyWithExpandedCLI150Status() async throws {
+        let fixtureURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .appendingPathComponent("Fixtures/1.5.0/system-status-1.5.0.json")
+        let service = makeService(
+            executableURLs: [executableURL],
+            versionJSON: versionJSON(cliVersion: "1.5.0"),
+            statusJSON: try String(contentsOf: fixtureURL, encoding: .utf8)
+        )
+
+        guard case .ready(let context) = await service.check() else {
+            return XCTFail("Expected CLI 1.5.0 to be ready")
+        }
+        XCTAssertEqual(context.versions.cli?.version, "1.5.0")
+        XCTAssertEqual(context.status.version, "1.5.0")
+    }
+
     func testReportsUnsupportedCLIVersionWithDetectedVersions() async {
         let service = makeService(
             executableURLs: [executableURL],
@@ -105,21 +122,24 @@ final class PreflightServiceTests: XCTestCase {
     }
 
     func testReportsStoppedServiceFromExitOneStatusJSON() async {
-        for status in ["unregistered", "not running"] {
-            let service = makeService(
-                executableURLs: [executableURL],
-                statusResult: .failure(.nonZeroExit(
-                    invocation: "/test/container system status --format json",
-                    exitCode: 1,
-                    standardError: "",
-                    standardOutput: "{\"status\":\"\(status)\"}"
-                ))
-            )
+        for cliVersion in ["1.0.0", "1.5.0"] {
+            for status in ["unregistered", "not running"] {
+                let service = makeService(
+                    executableURLs: [executableURL],
+                    versionJSON: versionJSON(cliVersion: cliVersion),
+                    statusResult: .failure(.nonZeroExit(
+                        invocation: "/test/container system status --format json",
+                        exitCode: 1,
+                        standardError: "",
+                        standardOutput: "{\"status\":\"\(status)\"}"
+                    ))
+                )
 
-            guard case .serviceStopped(let context) = await service.check() else {
-                return XCTFail("Expected stopped service for status \(status)")
+                guard case .serviceStopped(let context) = await service.check() else {
+                    return XCTFail("Expected stopped service for status \(status)")
+                }
+                XCTAssertFalse(context.status.isRunning)
             }
-            XCTAssertFalse(context.status.isRunning)
         }
     }
 
@@ -342,6 +362,7 @@ final class PreflightServiceTests: XCTestCase {
         XCTAssertFalse(SupportedCLIVersions.current.contains(try SemanticVersion("0.12.2")))
         XCTAssertTrue(SupportedCLIVersions.current.contains(try SemanticVersion("0.12.3")))
         XCTAssertTrue(SupportedCLIVersions.current.contains(try SemanticVersion("1.3.1")))
+        XCTAssertTrue(SupportedCLIVersions.current.contains(try SemanticVersion("1.5.0")))
         XCTAssertFalse(SupportedCLIVersions.current.contains(try SemanticVersion("2.0.0")))
         XCTAssertThrowsError(try SemanticVersion("not-a-version"))
     }
