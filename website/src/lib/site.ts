@@ -35,28 +35,26 @@ export { APP_VERSION } from "./version"
  * because the line has to break in a particular place at display size. Keep
  * the two in step.
  */
-export const HEADLINE = "A window for Apple's container runtime."
+export const HEADLINE = "Apple containers. At home on your Mac."
 
 export const DESCRIPTION =
   "CargoDeck is a free, open-source native macOS app for Apple's container CLI. Run containers, build and pull images, follow logs and live stats, and manage Linux machines without the terminal."
 
 /** The hero deck, directly under the headline. */
 export const DECK =
-  "A native macOS app for the container CLI. It runs the same binary already on your Mac and gives it lists, forms, inspectors and live logs — with the exact command on screen before anything runs."
+  "Run containers, manage images, and follow logs in a native macOS app for Apple’s container CLI. The tools you know, with a window of their own."
 
 export const SCREENSHOT = {
   /** Base name shared by every derivative in `public/`. */
   base: "/cargodeck-containers-inspector",
   width: 1200,
   height: 778,
-  alt: "CargoDeck on macOS showing the Containers list with the inspector open on a running container, with live memory, CPU, network and block I/O statistics and streaming logs.",
+  alt: "CargoDeck’s native macOS interface showing the Containers list, runtime navigation, search, state filters, and the activity sidebar.",
 } as const
 
 /**
- * The hero's requirements plate: the facts a reader needs before they click
- * download, laid out the way the app's own inspector lays out a key and a
- * value. Data, not decoration — which is why there is no eyebrow above the
- * headline saying the same things in tracked capitals.
+ * The installation requirements: the facts a reader needs before downloading,
+ * presented beside the download action.
  */
 export const REQUIREMENTS: Array<{ label: string; value: string }> = [
   { label: "macOS", value: "26 or later" },

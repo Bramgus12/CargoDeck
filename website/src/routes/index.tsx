@@ -82,7 +82,7 @@ function Home() {
         }}
       />
       <SiteHeader />
-      <main>
+      <main id="main-content">
         <Hero />
         <Covers />
         <Command />

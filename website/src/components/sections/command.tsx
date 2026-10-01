@@ -16,21 +16,22 @@ const TONE = {
  */
 export function Command() {
   return (
-    <section
-      id="command"
-      className="mx-auto max-w-[1160px] scroll-mt-20 px-6 pt-28 sm:px-8 sm:pt-36"
-    >
-      <h2 className="t-heading max-w-[18ch] text-[clamp(1.9rem,4.6vw,2.9rem)] text-pretty">
-        The command is always on screen.
-      </h2>
-      <p className="mt-5 max-w-[64ch] text-[16px] leading-[1.6] text-pretty text-slate">
-        Fill in the sheet and the app shows the exact invocation before it runs.
-        It launches the executable directly, never through a shell, so what you
-        read is what happens. Copy it into a script, or just read it and learn
-        the flag.
-      </p>
+    <section id="command" className="page-width command-section">
+      <div className="section-intro">
+        <h2 className="t-heading section-heading">
+          A window.
+          <br />
+          With nothing hidden.
+        </h2>
+        <p className="section-deck">
+          Fill in the sheet and the app shows the exact invocation before it
+          runs. It launches the executable directly, never through a shell, so
+          what you read is what happens. Copy it into a script, or just read it
+          and learn the flag.
+        </p>
+      </div>
 
-      <div className="mt-11 grid gap-6 lg:grid-cols-2 lg:gap-8">
+      <div className="command-demo grid gap-5 lg:grid-cols-2">
         <RunSheet />
         <CommandBlock />
       </div>
