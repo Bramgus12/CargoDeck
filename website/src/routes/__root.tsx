@@ -17,7 +17,7 @@ export const Route = createRootRoute({
       // controls, the mobile address bar — is told to match rather than
       // following the reader's system setting.
       { name: "color-scheme", content: "light" },
-      { name: "theme-color", content: "#e9edf3" },
+      { name: "theme-color", content: "#f7f9fc" },
       { name: "apple-mobile-web-app-title", content: APP_NAME },
 
       { property: "og:type", content: "website" },

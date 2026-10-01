@@ -39,25 +39,26 @@ export function Covers() {
   const screen = SCREENS[active]
 
   return (
-    <section
-      id="covers"
-      className="mx-auto max-w-[1160px] scroll-mt-20 px-6 pt-28 sm:px-8 sm:pt-36"
-    >
-      <h2 className="t-heading max-w-[18ch] text-[clamp(1.9rem,4.6vw,2.9rem)] text-pretty">
-        Six screens for the whole runtime.
-      </h2>
-      <p className="mt-5 max-w-[64ch] text-[16px] leading-[1.6] text-pretty text-slate">
-        The app is organised the way the CLI is, so what you learn in one
-        transfers to the other. Coverage is still partial — not every flag has a
-        surface yet, and the gaps close release by release.
-      </p>
+    <section id="covers" className="page-width features-section">
+      <div className="section-intro">
+        <h2 className="t-heading section-heading">
+          Your runtime,
+          <br />
+          in one place.
+        </h2>
+        <p className="section-deck">
+          From your first container to the networks that connect them. Explore
+          six screens built around the CLI you already use. Coverage is still
+          partial, with more flags finding a home in each release.
+        </p>
+      </div>
 
-      <div className="on-ink float mt-11 overflow-hidden rounded-window bg-ink">
+      <div className="on-ink feature-window overflow-hidden rounded-window bg-ink">
         <div className="flex items-center gap-2 border-b border-rule-ink px-4 py-3">
           <span className="flex gap-1.5" aria-hidden="true">
-            <span className="size-[9px] rounded-full bg-rule-ink" />
-            <span className="size-[9px] rounded-full bg-rule-ink" />
-            <span className="size-[9px] rounded-full bg-rule-ink" />
+            <span className="size-[9px] rounded-full bg-[#ff6058]" />
+            <span className="size-[9px] rounded-full bg-[#ffbd2e]" />
+            <span className="size-[9px] rounded-full bg-[#28c840]" />
           </span>
           <span className="t-label ml-1.5 text-[12px] text-haze">
             CargoDeck
@@ -113,7 +114,7 @@ export function Covers() {
             })}
           </div>
 
-          <div className="flex min-h-[330px] flex-col sm:min-h-[300px]">
+          <div className="flex min-h-[330px] flex-col sm:min-h-[330px]">
             {SCREENS.map((item, index) => (
               <div
                 key={item.name}

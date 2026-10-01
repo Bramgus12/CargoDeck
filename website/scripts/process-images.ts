@@ -21,7 +21,7 @@ const publicDir = join(root, "public")
 const SCREENSHOT_WIDTHS = [1200, 2400]
 
 /** The site's ground: the cool aluminium the whole page sits on. */
-const PAPER = "#E9EDF3"
+const PAPER = "#F7F9FC"
 
 async function screenshots() {
   const sourcePath = join(root, "screenshots", "containers-inspector.png")
@@ -136,11 +136,11 @@ async function openGraph() {
   const text = Buffer.from(`
     <svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
       <style>
-        .n { font-family: "Helvetica Neue", Helvetica, sans-serif; fill: #0B1220; }
-        .s { font-family: "Helvetica Neue", Helvetica, sans-serif; fill: #4F5A6B; }
+        .n { font-family: "Helvetica Neue", Helvetica, sans-serif; fill: #172437; }
+        .s { font-family: "Helvetica Neue", Helvetica, sans-serif; fill: #536175; }
       </style>
       <text class="n" x="72" y="212" font-size="42" font-weight="700" letter-spacing="-1">CargoDeck</text>
-      <text class="s" x="72" y="266" font-size="25">A window for Apple’s container runtime.</text>
+      <text class="s" x="72" y="266" font-size="25">Apple containers. At home on your Mac.</text>
     </svg>`)
 
   await sharp({
