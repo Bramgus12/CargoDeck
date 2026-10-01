@@ -29,6 +29,14 @@ no client-side dependency beyond React and the router — everything it draws,
 including the six sidebar glyphs, is written here. Keep it that way: every
 package is more JavaScript on a page whose job is to load fast.
 
+Type checking uses TypeScript 7 through the `@typescript/native` alias, which
+provides `tsc`. ESLint still needs the TypeScript 6 compiler API, so the
+`typescript` entry aliases Microsoft's `@typescript/typescript6` compatibility
+package. Keep both aliases until typescript-eslint supports the TypeScript 7
+API; see [Microsoft's migration guidance](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0).
+The generated `src/routeTree.gen.ts` is excluded from Prettier because the router
+plugin owns its formatting.
+
 ## How it is built to be found
 
 The page exists to rank for "apple container gui" and its neighbours, so a few

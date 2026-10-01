@@ -230,6 +230,43 @@ final class CLIDecodingTests: XCTestCase {
         XCTAssertEqual(statsDTOs.first.map(ContainerStats.init(dto:))?.processCount, 3)
     }
 
+    func testDecodesExpandedSystemStatusFromCLI150() throws {
+        let dto: SystemStatusDTO = try decodeFixture("1.5.0/system-status-1.5.0.json")
+        let status = SystemStatus(dto: dto)
+
+        XCTAssertTrue(status.isRunning)
+        XCTAssertEqual(status.version, "1.5.0")
+        XCTAssertNil(status.message)
+    }
+
+    func testDecodesLegacyAPIServerVersionInSystemStatus() throws {
+        let dto = try JSONDecoder().decode(SystemStatusDTO.self, from: Data(
+            #"{"status":"running","apiServerVersion":"1.3.1"}"#.utf8
+        ))
+
+        XCTAssertTrue(SystemStatus(dto: dto).isRunning)
+        XCTAssertEqual(SystemStatus(dto: dto).version, "1.3.1")
+    }
+
+    func testSystemStatusKeepsServerVersionSeparateFromClientVersion() throws {
+        let dto = try JSONDecoder().decode(SystemStatusDTO.self, from: Data(
+            #"{"status":"running","client":{"version":"1.5.0"},"server":{"version":"1.4.1"}}"#.utf8
+        ))
+
+        XCTAssertEqual(SystemStatus(dto: dto).version, "1.4.1")
+    }
+
+    func testExpandedSystemStatusToleratesMissingSupplementaryFields() throws {
+        for json in [
+            #"{"status":"running","server":{"version":"1.5.0"}}"#,
+            #"{"status":"running","server":null}"#,
+            #"{"status":"running"}"#,
+        ] {
+            let dto = try JSONDecoder().decode(SystemStatusDTO.self, from: Data(json.utf8))
+            XCTAssertTrue(SystemStatus(dto: dto).isRunning)
+        }
+    }
+
     func testMinimumFieldsDoNotFailWholeDecode() throws {
         let data = Data(#"[{"configuration":{"id":"only-an-id"},"status":"mystery","newField":42}]"#.utf8)
         let dtos = try JSONDecoder().decode([ContainerDTO].self, from: data)

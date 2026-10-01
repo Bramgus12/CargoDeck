@@ -3,6 +3,24 @@ import XCTest
 @testable import CargoDeck
 
 final class SystemManagementServiceTests: XCTestCase {
+    func testSystemSnapshotAcceptsExpandedCLI150Status() async throws {
+        let fixtureURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .appendingPathComponent("Fixtures/1.5.0/system-status-1.5.0.json")
+        let service = CLISystemService(cli: SystemCLIStub(
+            version: #"[{"appName":"container","version":"1.5.0"}]"#,
+            status: try String(contentsOf: fixtureURL, encoding: .utf8),
+            diskUsage: #"[{"type":"images","totalCount":7,"sizeInBytes":8192}]"#,
+            logs: ""
+        ))
+
+        let snapshot = try await service.loadSnapshot()
+
+        XCTAssertTrue(snapshot.status.isRunning)
+        XCTAssertEqual(snapshot.status.version, "1.5.0")
+        XCTAssertEqual(snapshot.diskUsage.totalSizeBytes, 8_192)
+    }
+
     func testDiskUsageDecodesArrayAndKeyedShapesTolerantly() throws {
         let array = try SystemDiskUsage.decode(from: Data("""
         [
